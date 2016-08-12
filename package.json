@@ -38,29 +38,19 @@
   ],
   "system": {
     "main": "can-jquery",
-    "configDependencies": [
-      "live-reload"
-    ],
-    "npmIgnore": [
-      "documentjs",
-      "testee",
-      "generator-donejs",
-      "donejs-cli",
-      "steal-tools"
-    ],
     "npmAlgorithm": "flat"
   },
   "dependencies": {
-    "can": "^2.3.16",
+    "can-control": "^3.0.0-pre.5",
     "jquery": "~2.2.1"
   },
   "devDependencies": {
     "documentjs": "^0.4.2",
     "jshint": "^2.9.1",
     "cssify": "^0.6.0",
-    "steal": "^0.15.0",
+    "steal": "^0.16.0",
     "steal-qunit": "^0.1.1",
-    "steal-tools": "^0.15.0",
+    "steal-tools": "^0.16.0",
     "testee": "^0.2.4",
     "generator-donejs": "^0.9.0",
     "donejs-cli": "^0.8.0",
