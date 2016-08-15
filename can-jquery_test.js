@@ -1,16 +1,9 @@
-var QUnit = require("steal-qunit");
-var $ = require("can-jquery");
-var Control = require("can-control");
+import QUnit from 'steal-qunit';
+import plugin from './can-jquery';
 
-QUnit.module("can-controls");
+QUnit.module('can-jquery');
 
-QUnit.test("this.element is jQuery wrapped", function(){
-	var MyThing = Control.extend({
-		init: function(){
-			QUnit.ok(this.element instanceof $, "it is jQuery wrapped");
-		}
-	});
-
-	var div = document.createElement("div");
-	new MyThing(div);
+QUnit.test('Initialized the plugin', function(){
+  QUnit.equal(typeof plugin, 'function');
+  QUnit.equal(plugin(), 'This is the can-jquery plugin');
 });
