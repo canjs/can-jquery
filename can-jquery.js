@@ -1,3 +1,4 @@
-export default function() {
-  return `This is the can-jquery plugin`;
-}
+var $ = require("jquery");
+var ns = require("can-util/namespace");
+
+module.exports = ns.$ = $;
