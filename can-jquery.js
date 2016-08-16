@@ -4,18 +4,45 @@ var domEvents = require("can-util/dom/events/events");
 
 module.exports = ns.$ = $;
 
+var inSpecial = false;
+
+// Override addEventListener to listen to jQuery events as well.
+var addEventListener = domEvents.addEventListener;
+domEvents.addEventListener = function(event, callback){
+	if(!inSpecial) {
+		$(this).on(event, callback);
+	}
+	return addEventListener.apply(this, arguments);
+};
+
+var removeEventListener = domEvents.removeEventListener;
+domEvents.removeEventListener = function(event, callback){
+	if(!inSpecial) {
+		$(this).off(event, callback);
+	}
+	return removeEventListener.apply(this, arguments);
+};
+
+function withSpecial(callback){
+	return function(){
+		inSpecial = true;
+		callback.apply(this, arguments);
+		inSpecial = false;
+	};
+}
+
 function setupSpecialEvent(eventName){
 	var handler = function(){
 		$(this).trigger(eventName);
 	};
 
 	$.event.special[eventName] = {
-		setup: function(){
+		setup: withSpecial(function(){
 			domEvents.addEventListener.call(this, eventName, handler);
-		},
-		teardown: function(){
+		}),
+		teardown: withSpecial(function(){
 			domEvents.removeEventListener.call(this, eventName, handler);
-		}
+		})
 	};
 }
 
@@ -24,4 +51,3 @@ function setupSpecialEvent(eventName){
 	"removed",
 	"attributes"
 ].forEach(setupSpecialEvent);
-

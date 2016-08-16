@@ -23,36 +23,15 @@
     "document": "documentjs",
     "develop": "done-serve --static --develop --port 8080"
   },
-  "main": "dist/cjs/can-jquery",
-  "browser": {
-    "transform": [
-      "cssify"
-    ]
-  },
-  "browserify": {
-    "transform": [
-      "cssify"
-    ]
-  },
+  "main": "can-jquery.js",
   "keywords": [
     "canjs"
   ],
   "system": {
-    "main": "can-jquery",
-    "configDependencies": [
-      "live-reload"
-    ],
-    "npmIgnore": [
-      "documentjs",
-      "testee",
-      "generator-donejs",
-      "donejs-cli",
-      "steal-tools"
-    ],
     "npmAlgorithm": "flat"
   },
   "dependencies": {
-    "can": "^2.3.16",
+    "can-event": "^3.0.0-pre.6",
     "can-util": "^3.0.0-pre.34",
     "jquery": "~2.2.1"
   },
