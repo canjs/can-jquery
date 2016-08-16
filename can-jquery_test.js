@@ -107,3 +107,49 @@ QUnit.test("fire within controls", function(){
 
 	div.trigger("some-event");
 });
+
+QUnit.test("receives data passed to $.trigger", function(){
+	var MyControl = Control.extend({
+		"names-added": function(el, ev, first, second, third){
+			QUnit.equal(el[0].nodeName, "DIV", "element is the first arg");
+			QUnit.ok(ev instanceof $.Event, "second arg is a jQuery Event");
+
+			QUnit.equal(first, "Matthew");
+			QUnit.equal(second, "David");
+			QUnit.equal(third, "Brian");
+		}
+	});
+
+	var dom = $("<div></div>");
+
+	new MyControl(dom);
+
+	dom.trigger("names-added", [
+		"Matthew",
+		"David",
+		"Brian"
+	]);
+});
+
+QUnit.test("receives data passed when delegating", function(){
+	var MyControl = Control.extend({
+		"ul	names-added": function(el, ev, first, second, third){
+			QUnit.equal(el[0].nodeName, "UL", "element is the first arg");
+			QUnit.ok(ev instanceof $.Event, "second arg is a jQuery Event");
+
+			QUnit.equal(first, "Matthew");
+			QUnit.equal(second, "David");
+			QUnit.equal(third, "Brian");
+		}
+	});
+
+	var dom = $("<div><ul></ul></div>");
+
+	new MyControl(dom);
+
+	dom.find("ul").trigger("names-added", [
+		"Matthew",
+		"David",
+		"Brian"
+	]);
+});
