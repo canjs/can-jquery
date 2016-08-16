@@ -31,12 +31,13 @@
     "npmAlgorithm": "flat"
   },
   "dependencies": {
+    "can-event": "^3.0.0-pre.6",
     "can-util": "^3.0.0-pre.34",
     "jquery": "~2.2.1"
   },
   "devDependencies": {
     "bit-docs": "0.0.6",
-    "can-control": "^3.0.0-pre.6",
+    "can-control": "^3.0.0-pre.7",
     "jshint": "^2.9.1",
     "cssify": "^0.6.0",
     "steal": "^0.15.0",
@@ -60,12 +61,13 @@
     },
     "readme": {
       "apis": [
-				{"can-jquery": [
-					"can-jquery/legacy"
-				]}
-			]
+        {
+          "can-jquery": [
+            "can-jquery/legacy"
+          ]
+        }
+      ]
     },
     "parent": "can-jquery"
   }
-
 }
