@@ -92,3 +92,18 @@ QUnit.test("removed is triggered without MutationObserver", function(){
 
 	QUnit.stop();
 });
+
+QUnit.module("custom jQuery events");
+
+QUnit.test("fire within controls", function(){
+	var MyControl = Control.extend({
+		"some-event": function(){
+			QUnit.ok(true, "some-event fired");
+		}
+	});
+
+	var div = $("<div>");
+	new MyControl(div);
+
+	div.trigger("some-event");
+});
