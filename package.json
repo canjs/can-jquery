@@ -20,7 +20,7 @@
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
     "build": "node build.js",
-    "document": "documentjs",
+    "document": "bit-docs",
     "develop": "done-serve --static --develop --port 8080"
   },
   "main": "can-jquery.js",
@@ -31,13 +31,12 @@
     "npmAlgorithm": "flat"
   },
   "dependencies": {
-    "can-event": "^3.0.0-pre.6",
     "can-util": "^3.0.0-pre.34",
     "jquery": "~2.2.1"
   },
   "devDependencies": {
+    "bit-docs": "0.0.6",
     "can-control": "^3.0.0-pre.6",
-    "documentjs": "^0.4.2",
     "jshint": "^2.9.1",
     "cssify": "^0.6.0",
     "steal": "^0.15.0",
@@ -47,5 +46,26 @@
     "generator-donejs": "^0.9.0",
     "donejs-cli": "^0.8.0",
     "done-serve": "^0.1.0"
+  },
+  "bit-docs": {
+    "dependencies": {
+      "bit-docs-glob-finder": "^0.0.5",
+      "bit-docs-dev": "^0.0.3",
+      "bit-docs-js": "^0.0.3",
+      "bit-docs-generate-readme": "^0.0.8"
+    },
+    "glob": {
+      "pattern": "**/*.{js,md}",
+      "ignore": "node_modules/**/*"
+    },
+    "readme": {
+      "apis": [
+				{"can-jquery": [
+					"can-jquery/legacy"
+				]}
+			]
+    },
+    "parent": "can-jquery"
   }
+
 }

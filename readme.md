@@ -4,54 +4,49 @@
 
 CanJS integrations for jQuery
 
-## Usage
+- <code>[__can-jquery__ jQuery](#can-jquery-jquery)</code>
+  - <code>[__can-jquery/legacy__ jQuery](#can-jquerylegacy-jquery)</code>
 
-### ES6 use
+## API
 
-With StealJS, you can import this module directly in a template that is autorendered:
+## can-jquery `{jQuery}`
 
-```js
-import plugin from 'can-jquery';
-```
-
-### CommonJS use
-
-Use `require` to load `can-jquery` and everything else
-needed to create a template that uses `can-jquery`:
+Extensions to the event system so that can events and jQuery events are cross-bound. 
+Importing can-jquery will return the [jQuery object](http://api.jquery.com/jquery/) and wire up the event system.
 
 ```js
-var plugin = require("can-jquery");
+var $ = require("can-jquery");
+
+var div = $("<div>");
+
+div.on("inserted", function(){
+	// it inserted!
+});
+
+$("body").append(div);
 ```
 
-## AMD use
 
-Configure the `can` and `jquery` paths and the `can-jquery` package:
 
-```html
-<script src="require.js"></script>
-<script>
-	require.config({
-	    paths: {
-	        "jquery": "node_modules/jquery/dist/jquery",
-	        "can": "node_modules/canjs/dist/amd/can"
-	    },
-	    packages: [{
-		    	name: 'can-jquery',
-		    	location: 'node_modules/can-jquery/dist/amd',
-		    	main: 'lib/can-jquery'
-	    }]
-	});
-	require(["main-amd"], function(){});
-</script>
+
+### <code>jQuery</code>
+
+### can-jquery/legacy `{jQuery}`
+
+Enables legacy integrations between CanJS and jQuery. 
+Importing can/jquery/legacy will return the [jQuery object](http://api.jquery.com/jquery/). It will also import [can-jquery](#can-jquery-jquery) so that the event system hooks are set up.
+
+Additionally it will force element callbacks (such as those in [can-control]) to be jQuery wrapped.
+
+```js
+var $ = require("can-jquery/legacy");
 ```
 
-### Standalone use
 
-Load the `global` version of the plugin:
 
-```html
-<script src='./node_modules/can-jquery/dist/global/can-jquery.js'></script>
-```
+
+#### <code>jQuery</code>
+
 
 ## Contributing
 
