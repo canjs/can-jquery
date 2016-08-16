@@ -1,6 +1,6 @@
 {
   "name": "can-jquery",
-  "version": "3.0.0-pre.2",
+  "version": "3.0.0-pre.3",
   "description": "CanJS integrations for jQuery",
   "homepage": "https://canjs.com",
   "author": {
@@ -60,12 +60,13 @@
     },
     "readme": {
       "apis": [
-				{"can-jquery": [
-					"can-jquery/legacy"
-				]}
-			]
+        {
+          "can-jquery": [
+            "can-jquery/legacy"
+          ]
+        }
+      ]
     },
     "parent": "can-jquery"
   }
-
 }
