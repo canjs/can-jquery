@@ -54,6 +54,27 @@ QUnit.test("inserted is triggered without MutationObserver", function(){
 	QUnit.stop();
 });
 
+QUnit.test("inserted is triggered without MutationObserver going through jQuery",
+					 function(){
+	var mo = MO();
+	MO(false);
+
+	var $el = $("<div>");
+
+	$el.on("inserted", function(){
+		QUnit.ok(true, "inserted did fire");
+
+		QUnit.start();
+
+		MO(mo);
+	});
+	
+	$("#qunit-fixture").append($el);
+
+	QUnit.stop();
+
+});
+
 QUnit.test("removed is triggered", function(){
 	var $el = $("<div>");
 
@@ -92,6 +113,30 @@ QUnit.test("removed is triggered without MutationObserver", function(){
 
 	QUnit.stop();
 });
+
+QUnit.test("removed is triggered without MutationObserver through jQuery", function(){
+	var mo = MO();
+	MO(false);
+
+	var $el = $("<div>");
+
+	$el.on("removed", function(){
+		QUnit.ok(true, "removed did fire");
+
+		QUnit.start();
+		MO(mo);
+	});
+
+	$el.on("inserted", function(){
+		$el.remove();
+	});
+
+	var fixture = $("#qunit-fixture");
+	fixture.append($el);
+
+	QUnit.stop();
+});
+
 
 QUnit.module("custom jQuery events");
 
