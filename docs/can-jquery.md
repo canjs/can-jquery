@@ -17,6 +17,8 @@ div.on("inserted", function(){
 $("body").append(div);
 ```
 
+@signature `jQuery` Exports the [jQuery object](http://api.jquery.com/jquery/) after setting up bindings between the event systems.
+
 @body
 
 Using can-jquery causes the two event systems to be cross-bound. You can listen to special events within can using jQuery and you can listen to custom jQuery events within [can-control]s.
