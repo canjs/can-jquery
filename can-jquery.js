@@ -23,9 +23,14 @@ var slice = Array.prototype.slice;
 // onto the event.
 var addEventListener = domEvents.addEventListener;
 domEvents.addEventListener = function(event, callback){
+	var handler;
 	if(!inSpecial) {
-		var handler = function(ev){
+		var element = this;
+		handler = function(ev){
 			ev.eventArguments = slice.call(arguments, 1);
+
+			// Remove the event handler to prevent the event from being called twice
+			domEvents.removeEventListener.call(element, event, handler);
 
 			if(event === "removed") {
 				var self = this, args = arguments;
@@ -40,7 +45,7 @@ domEvents.addEventListener = function(event, callback){
 
 		$(this).on(event, handler);
 	}
-	return addEventListener.apply(this, arguments);
+	return addEventListener.call(this, event, handler || callback);
 };
 
 var removeEventListener = domEvents.removeEventListener;

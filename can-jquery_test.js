@@ -5,6 +5,7 @@ var mutate = require("can-util/dom/mutate/mutate");
 require("can-util/dom/events/inserted/inserted");
 require("can-util/dom/events/removed/removed");
 var MO = require("can-util/dom/mutation-observer/mutation-observer");
+var domEvents = require("can-util/dom/events/events");
 
 QUnit.module('can-controls');
 
@@ -197,4 +198,18 @@ QUnit.test("receives data passed when delegating", function(){
 		"David",
 		"Brian"
 	]);
+});
+
+QUnit.module("Regular dom events");
+
+QUnit.test("Only fires once", function(){
+	QUnit.expect(1);
+
+	var el = $("<div>");
+
+	domEvents.addEventListener.call(el[0], "click", function(){
+		QUnit.ok(true);
+	});
+
+	el.trigger("click");
 });
