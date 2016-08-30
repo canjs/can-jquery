@@ -51,12 +51,13 @@ domEvents.addEventListener = function(event, callback){
 var removeEventListener = domEvents.removeEventListener;
 domEvents.removeEventListener = function(event, callback){
 	if(!inSpecial) {
-		var eventHandler = domData.get.call(callback, EVENT_HANDLER);
-		if(eventHandler) {
-			domData.clean.call(callback, EVENT_HANDLER);
+		var eventHandler;
+		if(event === "removed") {
+			eventHandler = domData.get.call(callback, EVENT_HANDLER);
 		}
 
-		$(this).off(event, callback);
+		$(this).off(event, eventHandler || callback);
+		return;
 	}
 	return removeEventListener.apply(this, arguments);
 };
