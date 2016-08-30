@@ -1,5 +1,7 @@
 @module {jQuery} can-jquery can-jquery
 @parent can-ecosystem
+@group can-jquery.modules 0 Modules
+@group can-jquery.fns 1 Methods
 
 @description Extensions to the event system so that can events and jQuery events are cross-bound.
 

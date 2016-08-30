@@ -10,6 +10,7 @@ var isArrayLike = require("can-util/js/is-array-like/is-array-like");
 var makeArray = require("can-util/js/make-array/make-array");
 var mutate = require("can-util/dom/mutate/mutate");
 var setImmediate = require("can-util/js/set-immediate/set-immediate");
+var canViewModel = require("can-view-model");
 
 module.exports = ns.$ = $;
 
@@ -201,4 +202,9 @@ $.cleanData = function (elems){
 	});
 
 	oldClean(elems);
+};
+
+// $.fn.viewModel
+$.fn.viewModel = function(){
+	return canViewModel(this[0]);
 };
