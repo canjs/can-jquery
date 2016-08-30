@@ -1,5 +1,5 @@
 @module {jQuery} can-jquery/legacy can-jquery/legacy
-@parent can-jquery
+@parent can-jquery.modules
 
 @description Enables legacy integrations between CanJS and jQuery.
 

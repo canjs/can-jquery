@@ -6,6 +6,8 @@ require("can-util/dom/events/inserted/inserted");
 require("can-util/dom/events/removed/removed");
 var MO = require("can-util/dom/mutation-observer/mutation-observer");
 var domEvents = require("can-util/dom/events/events");
+var domData = require("can-util/dom/data/data");
+var Map = require("can-map");
 
 QUnit.module('can-controls');
 
@@ -212,4 +214,15 @@ QUnit.test("Only fires once", function(){
 	});
 
 	el.trigger("click");
+});
+
+QUnit.module("$.fn.viewModel()");
+
+QUnit.test("Gets an element's viewModel", function(){
+	var el = $("<div>");
+	var map = new Map();
+
+	domData.set.call(el[0], "viewModel", map);
+
+	QUnit.equal(el.viewModel(), map, "returns the map instance");
 });
