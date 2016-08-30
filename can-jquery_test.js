@@ -71,7 +71,7 @@ QUnit.test("inserted is triggered without MutationObserver going through jQuery"
 
 		MO(mo);
 	});
-	
+
 	$("#qunit-fixture").append($el);
 
 	QUnit.stop();
@@ -225,4 +225,18 @@ QUnit.test("Gets an element's viewModel", function(){
 	domData.set.call(el[0], "viewModel", map);
 
 	QUnit.equal(el.viewModel(), map, "returns the map instance");
+});
+
+
+QUnit.test("multiple times fired (#21)", function(){
+	QUnit.expect(2);
+
+	var el = $("<div>");
+
+	domEvents.addEventListener.call(el[0], "click", function(){
+		QUnit.ok(true);
+	});
+
+	el.trigger("click");
+	el.trigger("click");
 });

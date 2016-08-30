@@ -16,7 +16,6 @@ module.exports = ns.$ = $;
 
 var inSpecial = false;
 var EVENT_HANDLER = "can-jquery.eventHandler";
-var DELEGATE_HANDLER = "can-jquery.delegateHandler";
 var slice = Array.prototype.slice;
 
 // Override addEventListener to listen to jQuery events.
@@ -26,25 +25,25 @@ var addEventListener = domEvents.addEventListener;
 domEvents.addEventListener = function(event, callback){
 	var handler;
 	if(!inSpecial) {
-		var element = this;
-		handler = function(ev){
-			ev.eventArguments = slice.call(arguments, 1);
 
-			// Remove the event handler to prevent the event from being called twice
-			domEvents.removeEventListener.call(element, event, handler);
+		if(event === "removed") {
+			var element = this;
+			handler = function(ev){
+				ev.eventArguments = slice.call(arguments, 1);
 
-			if(event === "removed") {
+				// Remove the event handler to prevent the event from being called twice
+				domEvents.removeEventListener.call(element, event, handler);
+
+
 				var self = this, args = arguments;
 				return setImmediate(function(){
 					return callback.apply(self, args);
 				});
-			}
-
-			return callback.apply(this, arguments);
-		};
-		domData.set.call(callback, EVENT_HANDLER, handler);
-
-		$(this).on(event, handler);
+			};
+			domData.set.call(callback, EVENT_HANDLER, handler);
+		}
+		$(this).on(event, handler || callback);
+		return;
 	}
 	return addEventListener.call(this, event, handler || callback);
 };
@@ -62,28 +61,12 @@ domEvents.removeEventListener = function(event, callback){
 	return removeEventListener.apply(this, arguments);
 };
 
-var addDelegateListener = domEvents.addDelegateListener;
 domEvents.addDelegateListener = function(type, selector, callback){
-	var handler = function(ev){
-		if((ev instanceof $.Event) && ev.eventArguments) {
-			var args = [ev].concat(ev.eventArguments);
-			return callback.apply(this, args);
-		}
-		return callback.apply(this, arguments);
-	};
-	domData.set.call(callback, DELEGATE_HANDLER, handler);
-
-	return addDelegateListener.call(this, type, selector, handler);
+	$(this).on(type, selector, callback);
 };
 
-var removeDelegateListener = domEvents.removeDelegateListener;
 domEvents.removeDelegateListener = function(type, selector, callback){
-	var handler = domData.get.call(callback, DELEGATE_HANDLER);
-	if(handler) {
-		domData.clean.call(callback, DELEGATE_HANDLER);
-	}
-	
-	return removeDelegateListener.apply(this, arguments);
+	$(this).off(type, selector, callback);
 };
 
 function withSpecial(callback){
@@ -165,7 +148,7 @@ if(cbIndex === undefined) {
 	});
 } else {
 	// Older jQuery that supports domManip
-	
+
 
 	$.fn.domManip = (cbIndex === 2 ?
 		function (args, table, callback) {
