@@ -18,6 +18,13 @@ var inSpecial = false;
 var EVENT_HANDLER = "can-jquery.eventHandler";
 var slice = Array.prototype.slice;
 
+// Override dispatch to use $.trigger.
+// This is needed so that extra arguments can be used
+// when using domEvents.dispatch/domEvents.trigger.
+domEvents.dispatch = function(event, args) {
+	$(this).trigger(event, args);
+};
+
 // Override addEventListener to listen to jQuery events.
 // This is needed to add the arguments provided to $.trigger
 // onto the event.
