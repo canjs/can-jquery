@@ -21,12 +21,8 @@ var slice = Array.prototype.slice;
 // Override dispatch to use $.trigger.
 // This is needed so that extra arguments can be used
 // when using domEvents.dispatch/domEvents.trigger.
-domEvents.dispatch = function(event, args, bubbles) {
-	if (bubbles) {
-		$(this).trigger(event, args);
-	} else {
-		$(this).triggerHandler(event, args);
-	}
+domEvents.dispatch = function(event, args) {
+	$(this).trigger(event, args);
 };
 
 // Override addEventListener to listen to jQuery events.
@@ -95,6 +91,7 @@ function setupSpecialEvent(eventName){
 	};
 
 	$.event.special[eventName] = {
+		noBubble: true,
 		setup: withSpecial(function(){
 			domEvents.addEventListener.call(this, eventName, handler);
 		}),
