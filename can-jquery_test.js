@@ -102,6 +102,21 @@ QUnit.test("inserted is triggered without MutationObserver going through jQuery"
 
 });
 
+QUnit.test("inserted should not use $.trigger", function(){
+	var $el = $("div>");
+
+	$el.on("inserted", function(ev, arg1, arg2){
+		QUnit.ok(arg1 === undefined, "should not pass arg1");
+		QUnit.ok(arg2 === undefined, "should not pass arg2");
+		QUnit.ok(true, "inserted did fire");
+
+		QUnit.start();
+	});
+
+	QUnit.stop();
+	domEvents.dispatch.call($el[0], "inserted", ["foo", "bar"]);
+});
+
 QUnit.test("removed is triggered", function(){
 	var $el = $("<div>");
 
@@ -162,6 +177,21 @@ QUnit.test("removed is triggered without MutationObserver through jQuery", funct
 	fixture.append($el);
 
 	QUnit.stop();
+});
+
+QUnit.test("removed should not use $.trigger", function(){
+	var $el = $("div>");
+
+	$el.on("removed", function(ev, arg1, arg2){
+		QUnit.ok(arg1 === undefined, "should not pass arg1");
+		QUnit.ok(arg2 === undefined, "should not pass arg2");
+		QUnit.ok(true, "removed did fire");
+
+		QUnit.start();
+	});
+
+	QUnit.stop();
+	domEvents.dispatch.call($el[0], "removed", ["foo", "bar"]);
 });
 
 QUnit.module("custom jQuery events");

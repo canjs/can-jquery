@@ -14,6 +14,7 @@ var canViewModel = require("can-view-model");
 
 module.exports = ns.$ = $;
 
+var specialEvents = {};
 var inSpecial = false;
 var EVENT_HANDLER = "can-jquery.eventHandler";
 var slice = Array.prototype.slice;
@@ -21,8 +22,13 @@ var slice = Array.prototype.slice;
 // Override dispatch to use $.trigger.
 // This is needed so that extra arguments can be used
 // when using domEvents.dispatch/domEvents.trigger.
+var domDispatch = domEvents.dispatch;
 domEvents.dispatch = function(event, args) {
-	$(this).trigger(event, args);
+	if (!specialEvents[event]) {
+		$(this).trigger(event, args);
+	} else {
+		domDispatch.apply(this, arguments);
+	}
 };
 
 // Override addEventListener to listen to jQuery events.
@@ -86,6 +92,8 @@ function withSpecial(callback){
 }
 
 function setupSpecialEvent(eventName){
+	specialEvents[eventName] = true;
+
 	var handler = function(){
 		$(this).trigger(eventName);
 	};
