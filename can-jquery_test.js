@@ -38,6 +38,30 @@ QUnit.test("inserted is triggered", function(){
 	QUnit.stop();
 });
 
+QUnit.test("inserted does not bubble", function(){
+	expect(2);
+	var $div = $("<div>");
+	var $span = $("<span>");	
+
+	$div.on("inserted", function(){
+		QUnit.ok(true, "inserted fired for div");
+	});
+
+	$span.on("inserted", function(){
+		QUnit.ok(true, "inserted fired for span");
+	});
+
+	mutate.appendChild.call($("#qunit-fixture")[0], $div[0]);
+
+	mutate.appendChild.call($div[0], $span[0]);
+
+	QUnit.stop();
+
+	setTimeout(function() {
+		QUnit.start();
+	}, 50);
+});
+
 QUnit.test("inserted is triggered without MutationObserver", function(){
 	var mo = MO();
 	MO(false);
@@ -140,7 +164,6 @@ QUnit.test("removed is triggered without MutationObserver through jQuery", funct
 	QUnit.stop();
 });
 
-
 QUnit.module("custom jQuery events");
 
 QUnit.test("fire within controls", function(){
@@ -200,42 +223,6 @@ QUnit.test("receives data passed to $.trigger when using domEvents.dispatch", fu
 		"David",
 		"Brian"
 	]);
-});
-
-QUnit.test("dispatch should bubble when `bubbles===true`", function() {
-	expect(2);
-	var div = $("<div></div>");
-	var span = $("<span></span>");
-
-	div.append(span);
-
-	domEvents.addEventListener.call(div, "foo-bar", function () {
-		ok(true, 'event should bubble');
-	});
-
-	domEvents.addEventListener.call(span, "foo-bar", function () {
-		ok(true, 'event should be dispatched');
-	});
-
-	domEvents.dispatch.call(span, "foo-bar", [], true);
-});
-
-QUnit.test("dispatch should not bubble when `bubbles===false`", function() {
-	expect(1);
-	var div = $("<div></div>");
-	var span = $("<span></span>");
-
-	div.append(span);
-
-	domEvents.addEventListener.call(div, "foo-bar", function () {
-		ok(false, 'event should not bubble');
-	});
-
-	domEvents.addEventListener.call(span, "foo-bar", function () {
-		ok(true, 'event should be dispatched');
-	});
-
-	domEvents.dispatch.call(span, "foo-bar", [], false);
 });
 
 QUnit.test("receives data passed when delegating", function(){
