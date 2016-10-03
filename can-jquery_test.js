@@ -202,6 +202,42 @@ QUnit.test("receives data passed to $.trigger when using domEvents.dispatch", fu
 	]);
 });
 
+QUnit.test("dispatch should bubble when `bubbles===true`", function() {
+	expect(2);
+	var div = $("<div></div>");
+	var span = $("<span></span>");
+
+	div.append(span);
+
+	domEvents.addEventListener.call(div, "foo-bar", function () {
+		ok(true, 'event should bubble');
+	});
+
+	domEvents.addEventListener.call(span, "foo-bar", function () {
+		ok(true, 'event should be dispatched');
+	});
+
+	domEvents.dispatch.call(span, "foo-bar", [], true);
+});
+
+QUnit.test("dispatch should not bubble when `bubbles===false`", function() {
+	expect(1);
+	var div = $("<div></div>");
+	var span = $("<span></span>");
+
+	div.append(span);
+
+	domEvents.addEventListener.call(div, "foo-bar", function () {
+		ok(false, 'event should not bubble');
+	});
+
+	domEvents.addEventListener.call(span, "foo-bar", function () {
+		ok(true, 'event should be dispatched');
+	});
+
+	domEvents.dispatch.call(span, "foo-bar", [], false);
+});
+
 QUnit.test("receives data passed when delegating", function(){
 	var MyControl = Control.extend({
 		"ul	names-added": function(el, ev, first, second, third){
