@@ -38,7 +38,10 @@
   },
   "devDependencies": {
     "bit-docs": "0.0.6",
+    "can-component": "^3.0.0-pre.19",
     "can-control": "^3.0.0-pre.7",
+    "can-define": "^0.8.4",
+    "can-list": "^3.0.0-pre.8",
     "can-map": "^3.0.0-pre.8",
     "can-stache": "^3.0.0-pre.23",
     "can-stache-bindings": "^3.0.0-pre.29",
