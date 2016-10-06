@@ -2,6 +2,9 @@ var QUnit = require('steal-qunit');
 var CanMap = require("can-map");
 var stache = require('can-stache');
 var canEvent = require('can-event');
+var $ = require('can-jquery/legacy');
+var enableLegacyMode = require("can-jquery/legacy-toggle").enable;
+var disableLegacyMode = require("can-jquery/legacy-toggle").disable;
 require('can-stache-bindings');
 
 var makeDocument = require('can-vdom/make-document/make-document');
@@ -20,6 +23,7 @@ var MUT_OBS = MUTATION_OBSERVER();
 function makeTest(name, doc, mutObs){
 	QUnit.module(name, {
 		setup: function () {
+			enableLegacyMode($);
 			DOCUMENT(doc);
 			MUTATION_OBSERVER(mutObs);
 
@@ -33,6 +37,7 @@ function makeTest(name, doc, mutObs){
 			}
 		},
 		teardown: function(){
+			disableLegacyMode();
 			if(doc !== document) {
 				doc.body.removeChild(this.fixture);
 			}

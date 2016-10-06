@@ -1,6 +1,8 @@
 var QUnit = require("steal-qunit");
 var Control = require("can-control");
 var $ = require("can-jquery/legacy");
+var enableLegacyMode = require("can-jquery/legacy-toggle").enable;
+var disableLegacyMode = require("can-jquery/legacy-toggle").disable;
 var mutate = require("can-util/dom/mutate/mutate");
 require("can-util/dom/events/inserted/inserted");
 require("can-util/dom/events/removed/removed");
@@ -9,7 +11,14 @@ var domEvents = require("can-util/dom/events/events");
 var domData = require("can-util/dom/data/data");
 var Map = require("can-map");
 
-QUnit.module('can-controls');
+QUnit.module("can-jquery - can-controls", {
+	setup: function() {
+		enableLegacyMode($);
+	},
+	teardown: function() {
+		disableLegacyMode();
+	}
+});
 
 QUnit.test("this.element is jQuery wrapped", function(){
 	var MyThing = Control.extend({
@@ -22,7 +31,14 @@ QUnit.test("this.element is jQuery wrapped", function(){
 	new MyThing(div);
 });
 
-QUnit.module("inserted/removed");
+QUnit.module("can-jquery - inserted/removed", {
+	setup: function() {
+		enableLegacyMode($);
+	},
+	teardown: function() {
+		disableLegacyMode();
+	}
+});
 
 QUnit.test("inserted is triggered", function(){
 	var $el = $("<div>");
@@ -194,7 +210,14 @@ QUnit.test("removed should not use $.trigger", function(){
 	domEvents.dispatch.call($el[0], "removed", ["foo", "bar"]);
 });
 
-QUnit.module("custom jQuery events");
+QUnit.module("can-jquery - custom jQuery events", {
+	setup: function() {
+		enableLegacyMode($);
+	},
+	teardown: function() {
+		disableLegacyMode();
+	}
+});
 
 QUnit.test("fire within controls", function(){
 	var MyControl = Control.extend({
@@ -278,7 +301,14 @@ QUnit.test("receives data passed when delegating", function(){
 	]);
 });
 
-QUnit.module("Regular dom events");
+QUnit.module("can-jquery - Regular dom events", {
+	setup: function() {
+		enableLegacyMode($);
+	},
+	teardown: function() {
+		disableLegacyMode();
+	}
+});
 
 QUnit.test("Only fires once", function(){
 	QUnit.expect(1);
@@ -292,7 +322,14 @@ QUnit.test("Only fires once", function(){
 	el.trigger("click");
 });
 
-QUnit.module("$.fn.viewModel()");
+QUnit.module("can-jquery - $.fn.viewModel()", {
+	setup: function() {
+		enableLegacyMode($);
+	},
+	teardown: function() {
+		disableLegacyMode();
+	}
+});
 
 QUnit.test("Gets an element's viewModel", function(){
 	var el = $("<div>");
