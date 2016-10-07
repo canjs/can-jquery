@@ -75,12 +75,23 @@ domEvents.removeEventListener = function(event, callback){
 	return removeEventListener.apply(this, arguments);
 };
 
+// jQuery defines special event types for focus and blur
+// for use with event delegation. They do this because
+// focus and blur do not bubble.
+function delegateEventType(type) {
+	var typeMap = {
+		focus: 'focusin',
+		blur: 'focusout'
+	};
+	return typeMap[type] || type;
+}
+
 domEvents.addDelegateListener = function(type, selector, callback){
-	$(this).on(type, selector, callback);
+	$(this).on(delegateEventType(type), selector, callback);
 };
 
 domEvents.removeDelegateListener = function(type, selector, callback){
-	$(this).off(type, selector, callback);
+	$(this).off(delegateEventType(type), selector, callback);
 };
 
 function withSpecial(callback){
