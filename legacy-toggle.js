@@ -1,6 +1,9 @@
 var types = require("can-util/js/types/types");
 var dev = require("can-util/js/dev/dev");
 
+var origWrap = types.wrapElement;
+var origUnwrap = types.unwrapElement;
+
 function enable($) {
 	//!steal-remove-start
 	dev.warn("Using can-jquery/legacy will interfere with Components not expecting jQuery wrapped elements. Consider instead wrapping elements yourself in the init method.");
@@ -16,8 +19,8 @@ function enable($) {
 }
 
 function disable () {
-	delete types.wrapElement;
-	delete types.unwrapElement;
+	types.wrapElement = origWrap;
+	types.unwrapElement = origUnwrap;
 }
 
 module.exports = {

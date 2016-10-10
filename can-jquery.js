@@ -15,6 +15,7 @@ var canViewModel = require("can-view-model");
 module.exports = ns.$ = $;
 
 var specialEvents = {};
+var nativeDispatchEvents = { focus: true };
 var inSpecial = false;
 var EVENT_HANDLER = "can-jquery.eventHandler";
 var slice = Array.prototype.slice;
@@ -24,7 +25,7 @@ var slice = Array.prototype.slice;
 // when using domEvents.dispatch/domEvents.trigger.
 var domDispatch = domEvents.dispatch;
 domEvents.dispatch = function(event, args) {
-	if (!specialEvents[event]) {
+	if (!specialEvents[event] && !nativeDispatchEvents[event]) {
 		$(this).trigger(event, args);
 	} else {
 		domDispatch.apply(this, arguments);
@@ -75,12 +76,23 @@ domEvents.removeEventListener = function(event, callback){
 	return removeEventListener.apply(this, arguments);
 };
 
+// jQuery defines special event types for focus and blur
+// for use with event delegation. They do this because
+// focus and blur do not bubble.
+function delegateEventType(type) {
+	var typeMap = {
+		focus: 'focusin',
+		blur: 'focusout'
+	};
+	return typeMap[type] || type;
+}
+
 domEvents.addDelegateListener = function(type, selector, callback){
-	$(this).on(type, selector, callback);
+	$(this).on(delegateEventType(type), selector, callback);
 };
 
 domEvents.removeDelegateListener = function(type, selector, callback){
-	$(this).off(type, selector, callback);
+	$(this).off(delegateEventType(type), selector, callback);
 };
 
 function withSpecial(callback){

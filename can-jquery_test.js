@@ -4,14 +4,18 @@ var $ = require("can-jquery/legacy");
 var enableLegacyMode = require("can-jquery/legacy-toggle").enable;
 var disableLegacyMode = require("can-jquery/legacy-toggle").disable;
 var mutate = require("can-util/dom/mutate/mutate");
-require("can-util/dom/events/inserted/inserted");
-require("can-util/dom/events/removed/removed");
 var MO = require("can-util/dom/mutation-observer/mutation-observer");
 var domEvents = require("can-util/dom/events/events");
 var domData = require("can-util/dom/data/data");
-var Map = require("can-map");
+var CanMap = require("can-map");
+var stache = require("can-stache");
+var canEvent = require("can-event");
 
-QUnit.module("can-jquery - can-controls", {
+require("can-util/dom/events/inserted/inserted");
+require("can-util/dom/events/removed/removed");
+require("can-stache-bindings");
+
+QUnit.module("can-jquery/legacy - can-controls", {
 	setup: function() {
 		enableLegacyMode($);
 	},
@@ -31,7 +35,7 @@ QUnit.test("this.element is jQuery wrapped", function(){
 	new MyThing(div);
 });
 
-QUnit.module("can-jquery - inserted/removed", {
+QUnit.module("can-jquery/legacy - inserted/removed", {
 	setup: function() {
 		enableLegacyMode($);
 	},
@@ -210,7 +214,7 @@ QUnit.test("removed should not use $.trigger", function(){
 	domEvents.dispatch.call($el[0], "removed", ["foo", "bar"]);
 });
 
-QUnit.module("can-jquery - custom jQuery events", {
+QUnit.module("can-jquery/legacy - custom jQuery events", {
 	setup: function() {
 		enableLegacyMode($);
 	},
@@ -301,7 +305,7 @@ QUnit.test("receives data passed when delegating", function(){
 	]);
 });
 
-QUnit.module("can-jquery - Regular dom events", {
+QUnit.module("can-jquery/legacy - Regular dom events", {
 	setup: function() {
 		enableLegacyMode($);
 	},
@@ -322,7 +326,7 @@ QUnit.test("Only fires once", function(){
 	el.trigger("click");
 });
 
-QUnit.module("can-jquery - $.fn.viewModel()", {
+QUnit.module("can-jquery/legacy - $.fn.viewModel()", {
 	setup: function() {
 		enableLegacyMode($);
 	},
@@ -333,7 +337,7 @@ QUnit.module("can-jquery - $.fn.viewModel()", {
 
 QUnit.test("Gets an element's viewModel", function(){
 	var el = $("<div>");
-	var map = new Map();
+	var map = new CanMap();
 
 	domData.set.call(el[0], "viewModel", map);
 
@@ -352,4 +356,50 @@ QUnit.test("multiple times fired (#21)", function(){
 
 	el.trigger("click");
 	el.trigger("click");
+});
+
+QUnit.module("can-jquery/legacy - trigger extraParameters", {
+	setup: function() {
+		enableLegacyMode($);
+	},
+	teardown: function() {
+		disableLegacyMode();
+	}
+});
+
+QUnit.test("can-event passes extra args to handler", function () {
+	expect(3);
+	var template = stache("<p can-myevent='handleMyEvent'>{{content}}</p>");
+
+	var frag = template({
+		handleMyEvent: function(context, el, event, arg1, arg2) {
+			QUnit.ok(true, "handleMyEvent called");
+			QUnit.equal(arg1, "myarg1", "3rd argument is the extra event args");
+			QUnit.equal(arg2, "myarg2", "4rd argument is the extra event args");
+		}
+	});
+
+	var ta = $("#qunit-fixture")[0];
+	ta.appendChild(frag);
+	var p0 = ta.getElementsByTagName("p")[0];
+	canEvent.trigger.call(p0, "myevent", ["myarg1", "myarg2"]);
+});
+
+QUnit.test("extra args to handler can be read using `%arguments`", function () {
+	expect(4);
+	var template = stache("<p can-myevent='handleMyEvent(%arguments)'>{{content}}</p>");
+
+	var frag = template({
+		handleMyEvent: function(args) {
+			QUnit.ok(true, "handleMyEvent called");
+			QUnit.ok(args[0] instanceof $.Event, "args[0] is a jquery event");
+			QUnit.equal(args[1], "myarg1", "args[1] is the extra event args");
+			QUnit.equal(args[2], "myarg2", "args[2] is the extra event args");
+		}
+	});
+
+	var ta = $("#qunit-fixture")[0];
+	ta.appendChild(frag);
+	var p0 = ta.getElementsByTagName("p")[0];
+	canEvent.trigger.call(p0, "myevent", ["myarg1", "myarg2"]);
 });
