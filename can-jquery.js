@@ -15,6 +15,7 @@ var canViewModel = require("can-view-model");
 module.exports = ns.$ = $;
 
 var specialEvents = {};
+var nativeDispatchEvents = { focus: true };
 var inSpecial = false;
 var EVENT_HANDLER = "can-jquery.eventHandler";
 var slice = Array.prototype.slice;
@@ -24,7 +25,7 @@ var slice = Array.prototype.slice;
 // when using domEvents.dispatch/domEvents.trigger.
 var domDispatch = domEvents.dispatch;
 domEvents.dispatch = function(event, args) {
-	if (!specialEvents[event]) {
+	if (!specialEvents[event] && !nativeDispatchEvents[event]) {
 		$(this).trigger(event, args);
 	} else {
 		domDispatch.apply(this, arguments);
