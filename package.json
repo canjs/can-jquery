@@ -31,9 +31,9 @@
     "npmAlgorithm": "flat"
   },
   "dependencies": {
-    "can-event": "^3.0.0-pre.6",
-    "can-util": "^3.0.0-pre.34",
-    "can-view-model": "^3.0.0-pre.6",
+    "can-event": "^3.0.1",
+    "can-util": "^3.0.1",
+    "can-view-model": "^3.0.0",
     "jquery": "~2.2.1"
   },
   "devDependencies": {
