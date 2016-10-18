@@ -20,6 +20,8 @@ var inSpecial = false;
 var EVENT_HANDLER = "can-jquery.eventHandler";
 var slice = Array.prototype.slice;
 
+if ($) {
+
 // Override dispatch to use $.trigger.
 // This is needed so that extra arguments can be used
 // when using domEvents.dispatch/domEvents.trigger.
@@ -79,13 +81,13 @@ domEvents.removeEventListener = function(event, callback){
 // jQuery defines special event types for focus and blur
 // for use with event delegation. They do this because
 // focus and blur do not bubble.
-function delegateEventType(type) {
+var delegateEventType = function delegateEventType(type) {
 	var typeMap = {
 		focus: 'focusin',
 		blur: 'focusout'
 	};
 	return typeMap[type] || type;
-}
+};
 
 domEvents.addDelegateListener = function(type, selector, callback){
 	$(this).on(delegateEventType(type), selector, callback);
@@ -95,15 +97,15 @@ domEvents.removeDelegateListener = function(type, selector, callback){
 	$(this).off(delegateEventType(type), selector, callback);
 };
 
-function withSpecial(callback){
+var withSpecial = function withSpecial(callback){
 	return function(){
 		inSpecial = true;
 		callback.apply(this, arguments);
 		inSpecial = false;
 	};
-}
+};
 
-function setupSpecialEvent(eventName){
+var setupSpecialEvent = function setupSpecialEvent(eventName){
 	specialEvents[eventName] = true;
 
 	var handler = function(){
@@ -119,7 +121,7 @@ function setupSpecialEvent(eventName){
 			domEvents.removeEventListener.call(this, eventName, handler);
 		})
 	};
-}
+};
 
 [
 	"inserted",
@@ -220,3 +222,5 @@ $.cleanData = function (elems){
 $.fn.viewModel = function(){
 	return canViewModel(this[0]);
 };
+
+}
