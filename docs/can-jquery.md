@@ -6,7 +6,9 @@
 
 @description Extensions to the event system so that can events and jQuery events are cross-bound.
 
-Importing can-jquery will return the [jQuery object](http://api.jquery.com/jquery/) and wire up the event system.
+@signature `jQuery`
+
+Importing `can-jquery` will return the [jQuery object](http://api.jquery.com/jquery/) and wire up the event system.
 
 ```js
 var $ = require("can-jquery");
@@ -20,15 +22,13 @@ div.on("inserted", function(){
 $("body").append(div);
 ```
 
-@signature `jQuery` Exports the [jQuery object](http://api.jquery.com/jquery/) after setting up bindings between the event systems.
-
 @body
 
-Using can-jquery causes the two event systems to be cross-bound. You can listen to special events within can using jQuery and you can listen to custom jQuery events within [can-control]s.
+Using `can-jquery` causes the two event systems to be cross-bound. You can listen to special events within [can-stache-bindings] using jQuery and you can listen to custom jQuery events within [can-control]s.
 
 ## Listening to inserted/removed events
 
-Using can-jquery you can listen to the removed/inserted event on an element.
+Using `can-jquery` you can listen to the removed/inserted event on an element.
 
 ```js
 var $ = require("can-jquery");
