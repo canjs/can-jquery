@@ -11,6 +11,7 @@ var makeArray = require("can-util/js/make-array/make-array");
 var mutate = require("can-util/dom/mutate/mutate");
 var setImmediate = require("can-util/js/set-immediate/set-immediate");
 var canViewModel = require("can-view-model");
+require("./data.js");
 
 module.exports = ns.$ = $;
 

@@ -403,3 +403,65 @@ QUnit.test("extra args to handler can be read using `%arguments`", function () {
 	var p0 = ta.getElementsByTagName("p")[0];
 	canEvent.trigger.call(p0, "myevent", ["myarg1", "myarg2"]);
 });
+
+QUnit.module("can-jquery/legacy - data functions", {
+	setup: function() {
+		enableLegacyMode($);
+		this.$div = $("<div />").appendTo("#qunit-fixture");
+	},
+	teardown: function() {
+		disableLegacyMode();
+	}
+});
+
+QUnit.test("data() compatibility with can-util/dom/data/", function() {
+	domData.set.call(this.$div[0], "foo", "bar");
+	QUnit.equal(this.$div.data("foo"), "bar");
+
+	this.$div.data("foo", "baz");
+	QUnit.equal(domData.get.call(this.$div[0], "foo"), "baz");
+});
+
+QUnit.test("data() returns full data object from domData.get() with no arguments", function() {
+	domData.set.call(this.$div[0], "foo", "bar");
+	QUnit.deepEqual(this.$div.data(), {"foo" : "bar"});
+
+	QUnit.deepEqual($.data(this.$div[0]), {"foo" : "bar"});
+});
+
+QUnit.test("data() destructures objects before passing to domData.set", function() {
+	this.$div.data({"foo": "baz"});
+	QUnit.equal(domData.get.call(this.$div[0], "foo"), "baz");
+});
+
+QUnit.test("hasData() checks both jQuery data and domData", function() {
+	domData.set.call(this.$div[0], "foo", "bar");
+	$.data(this.$div[0], "quux", "thud");
+	QUnit.ok($.hasData(this.$div[0], "foo"));
+	QUnit.ok($.hasData(this.$div[0], "quux"));
+});
+
+QUnit.test("removeData() also calls domData.clean", function() {
+	domData.set.call(this.$div[0], "foo", "bar");
+	domData.set.call(this.$div[0], "quux", "thud");
+
+	this.$div.removeData("foo");
+	QUnit.ok(!domData.get.call(this.$div[0], "foo"));
+	QUnit.equal(domData.get.call(this.$div[0], "quux"), "thud");
+
+	this.$div.removeData(); // remove all remaining data;
+	QUnit.ok(!domData.get.call(this.$div[0], "quux"));
+
+	// Repeat for static $.removeData
+	domData.set.call(this.$div[0], "foo", "bar");
+	domData.set.call(this.$div[0], "quux", "thud");
+
+	$.removeData(this.$div[0], "foo");
+	QUnit.ok(!domData.get.call(this.$div[0], "foo"));
+	QUnit.equal(domData.get.call(this.$div[0], "quux"), "thud");
+
+	$.removeData(this.$div[0]); // remove all remaining data;
+	QUnit.ok(!domData.get.call(this.$div[0], "quux"));
+});
+
+
