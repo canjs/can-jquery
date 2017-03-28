@@ -11,6 +11,7 @@ var makeArray = require("can-util/js/make-array/make-array");
 var mutate = require("can-util/dom/mutate/mutate");
 var setImmediate = require("can-util/js/set-immediate/set-immediate");
 var canViewModel = require("can-view-model");
+var MO = require("can-util/dom/mutation-observer/mutation-observer");
 
 module.exports = ns.$ = $;
 
@@ -52,9 +53,14 @@ domEvents.addEventListener = function(event, callback){
 
 
 				var self = this, args = arguments;
-				return setImmediate(function(){
+				if (MO()) {
 					return callback.apply(self, args);
-				});
+				} else {
+					// if not using mutation observers, ensure event is dispatch async
+					return setImmediate(function(){
+						return callback.apply(self, args);
+					});
+				}
 			};
 			domData.set.call(callback, EVENT_HANDLER, handler);
 		}
