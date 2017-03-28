@@ -29,14 +29,14 @@
   ],
   "dependencies": {
     "can-event": "^3.0.1",
-    "can-util": "3.3.2",
+    "can-util": "^3.3.3",
     "can-view-model": "^3.0.0",
     "jquery": "2.x - 3.x"
   },
   "devDependencies": {
     "bit-docs": "0.0.7",
     "can-component": "^3.0.0",
-    "can-control": "^3.0.0",
+    "can-control": "^3.0.9",
     "can-define": "^1.0.0",
     "can-list": "^3.0.0",
     "can-map": "^3.0.0",
