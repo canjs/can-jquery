@@ -132,7 +132,8 @@ var setupSpecialEvent = function setupSpecialEvent(eventName){
 [
 	"inserted",
 	"removed",
-	"attributes"
+	"attributes",
+	"beforeremove"
 ].forEach(setupSpecialEvent);
 
 
