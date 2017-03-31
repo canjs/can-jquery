@@ -403,3 +403,24 @@ QUnit.test("extra args to handler can be read using `%arguments`", function () {
 	var p0 = ta.getElementsByTagName("p")[0];
 	canEvent.trigger.call(p0, "myevent", ["myarg1", "myarg2"]);
 });
+
+QUnit.module("can-jquery - addEventListener / removeEventListener");
+
+QUnit.test("should clean up domData", function(){
+	var $el = $("<div>");
+
+	domEvents.addEventListener.call($el[0], "removed", function(){
+		QUnit.ok(!domData.get.call($el[0], 'can-jquery.eventHandler'), 'domData is removed for element');
+		QUnit.start();
+	});
+
+	domEvents.addEventListener.call($el[0], "inserted", function(){
+		QUnit.ok(domData.get.call($el[0], 'can-jquery.eventHandler'), 'domData is set for element');
+		$el.remove();
+	});
+
+	var fixture = $("#qunit-fixture");
+	fixture.append($el);
+
+	QUnit.stop();
+});

@@ -62,7 +62,7 @@ domEvents.addEventListener = function(event, callback){
 					});
 				}
 			};
-			domData.set.call(callback, EVENT_HANDLER, handler);
+			domData.set.call(this, EVENT_HANDLER, handler);
 		}
 		$(this).on(event, handler || callback);
 		return;
@@ -75,7 +75,8 @@ domEvents.removeEventListener = function(event, callback){
 	if(!inSpecial) {
 		var eventHandler;
 		if(event === "removed") {
-			eventHandler = domData.get.call(callback, EVENT_HANDLER);
+			eventHandler = domData.get.call(this, EVENT_HANDLER);
+			domData.clean.call(this, EVENT_HANDLER);
 		}
 
 		$(this).off(event, eventHandler || callback);
