@@ -28,7 +28,7 @@
     "canjs"
   ],
   "dependencies": {
-    "can-event": "^3.0.1",
+    "can-event": "3.2.0",
     "can-util": "^3.3.3",
     "can-view-model": "^3.0.0",
     "jquery": "2.x - 3.x"
