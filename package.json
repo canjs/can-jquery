@@ -38,7 +38,7 @@
     "can-component": "^3.0.0",
     "can-control": "^3.0.10",
     "can-define": "^1.0.0",
-    "can-list": "^3.0.0",
+    "can-list": "3.0.3",
     "can-map": "^3.0.0",
     "can-stache": "^3.0.0",
     "can-stache-bindings": "^3.0.8",
