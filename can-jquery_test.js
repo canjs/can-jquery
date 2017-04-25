@@ -424,3 +424,23 @@ QUnit.test("should clean up domData", function(){
 
 	QUnit.stop();
 });
+
+QUnit.test("should not trigger events on Document Fragments", function() {
+	expect(0);
+	var origOn = $.fn.on;
+	var origOff = $.fn.off;
+	$.fn.on = function() {
+		QUnit.ok(false, 'should not set up jQuery event listener');
+	};
+	$.fn.off = function() {
+		QUnit.ok(false, 'should not remove jQuery event listener');
+	};
+
+	var el = document.createDocumentFragment();
+
+	domEvents.addEventListener.call(el, "custom-event", function() { });
+	domEvents.removeEventListener.call(el, "custom-event", function() { });
+
+	$.fn.on = origOn;
+	$.fn.off = origOff;
+});

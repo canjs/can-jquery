@@ -41,16 +41,25 @@ domEvents.dispatch = function(event, args) {
 var addEventListener = domEvents.addEventListener;
 domEvents.addEventListener = function(event, callback){
 	var handler;
+
+	// don't set up event listeners for document fragments
+	// since events will not be triggered and the handlers
+	// could lead to memory leaks
+	if (this.nodeName === '#document-fragment') {
+		return;
+	}
+
 	if(!inSpecial) {
 
 		if(event === "removed") {
 			var element = this;
+
+			// create handler that will dispatch original event handler
 			handler = function(ev){
 				ev.eventArguments = slice.call(arguments, 1);
 
 				// Remove the event handler to prevent the event from being called twice
 				domEvents.removeEventListener.call(element, event, handler);
-
 
 				var self = this, args = arguments;
 				if (MO()) {
@@ -62,8 +71,14 @@ domEvents.addEventListener = function(event, callback){
 					});
 				}
 			};
+
+			// store handler on domData so it can be retrieved
+			// and passed to `off()` in the removeEventListener
 			domData.set.call(this, EVENT_HANDLER, handler);
 		}
+
+		// if handler was created, set it up
+		// otherwise, just set up original callback
 		$(this).on(event, handler || callback);
 		return;
 	}
@@ -72,6 +87,12 @@ domEvents.addEventListener = function(event, callback){
 
 var removeEventListener = domEvents.removeEventListener;
 domEvents.removeEventListener = function(event, callback){
+	// event handlers are not set up on document fragments
+	// so they do not need to be removed
+	if (this.nodeName === '#document-fragment') {
+		return;
+	}
+
 	if(!inSpecial) {
 		var eventHandler;
 		if(event === "removed") {
@@ -79,6 +100,8 @@ domEvents.removeEventListener = function(event, callback){
 			domData.clean.call(this, EVENT_HANDLER);
 		}
 
+		// if handler was found (set up above in addEventListener),
+		// remove it. otherwise, just remove original callback
 		$(this).off(event, eventHandler || callback);
 		return;
 	}
@@ -122,9 +145,13 @@ var setupSpecialEvent = function setupSpecialEvent(eventName){
 	$.event.special[eventName] = {
 		noBubble: true,
 		setup: withSpecial(function(){
+			// setup is called the first time a handler for `eventName`
+			// is set up for each element
 			domEvents.addEventListener.call(this, eventName, handler);
 		}),
 		teardown: withSpecial(function(){
+			// teardown is called after the last handler is removed for
+			// each element
 			domEvents.removeEventListener.call(this, eventName, handler);
 		})
 	};
