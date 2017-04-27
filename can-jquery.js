@@ -2,7 +2,6 @@ var $ = require("jquery");
 var ns = require("can-util/namespace");
 var buildFragment = require("can-util/dom/fragment/fragment");
 var domEvents = require("can-util/dom/events/events");
-var domData = require("can-util/dom/data/data");
 var domDispatch = require("can-util/dom/dispatch/dispatch");
 var each = require("can-util/js/each/each");
 var getChildNodes = require("can-util/dom/child-nodes/child-nodes");
@@ -12,14 +11,15 @@ var mutate = require("can-util/dom/mutate/mutate");
 var setImmediate = require("can-util/js/set-immediate/set-immediate");
 var canViewModel = require("can-view-model");
 var MO = require("can-util/dom/mutation-observer/mutation-observer");
+var CIDMap = require("can-util/js/cid-map/cid-map");
 
 module.exports = ns.$ = $;
 
 var specialEvents = {};
 var nativeDispatchEvents = { focus: true };
 var inSpecial = false;
-var EVENT_HANDLER = "can-jquery.eventHandler";
 var slice = Array.prototype.slice;
+var removedEventHandlerMap = new CIDMap();
 
 if ($) {
 
@@ -41,16 +41,28 @@ domEvents.dispatch = function(event, args) {
 var addEventListener = domEvents.addEventListener;
 domEvents.addEventListener = function(event, callback){
 	var handler;
+
+	// don't set up event listeners for document fragments
+	// since events will not be triggered and the handlers
+	// could lead to memory leaks
+	if (this.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+		return;
+	}
+
 	if(!inSpecial) {
 
 		if(event === "removed") {
 			var element = this;
+
+			// overwrite `removed` event handlers
+			// to ensure they are dispatched async,
+			// pass arguments through correctly from $.trigger,
+			// and automatically unbind
 			handler = function(ev){
 				ev.eventArguments = slice.call(arguments, 1);
 
 				// Remove the event handler to prevent the event from being called twice
 				domEvents.removeEventListener.call(element, event, handler);
-
 
 				var self = this, args = arguments;
 				if (MO()) {
@@ -62,8 +74,14 @@ domEvents.addEventListener = function(event, callback){
 					});
 				}
 			};
-			domData.set.call(this, EVENT_HANDLER, handler);
+
+			// add mapping of original handler to overwritten handler
+			// so that the correct handler can be unbound in removeEventListener
+			removedEventHandlerMap.set(callback, handler);
 		}
+
+		// if handler was created, set it up
+		// otherwise, just set up original callback
 		$(this).on(event, handler || callback);
 		return;
 	}
@@ -72,14 +90,24 @@ domEvents.addEventListener = function(event, callback){
 
 var removeEventListener = domEvents.removeEventListener;
 domEvents.removeEventListener = function(event, callback){
+	// event handlers are not set up on document fragments
+	// so they do not need to be removed
+	if (this.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+		return;
+	}
+
 	if(!inSpecial) {
-		var eventHandler;
+		var handler;
 		if(event === "removed") {
-			eventHandler = domData.get.call(this, EVENT_HANDLER);
-			domData.clean.call(this, EVENT_HANDLER);
+			// map callback back to overwritten handler
+			handler = removedEventHandlerMap.get(callback);
+			// remove mapping since handler is being removed
+			removedEventHandlerMap.delete(callback);
 		}
 
-		$(this).off(event, eventHandler || callback);
+		// if handler was found (set up above in addEventListener),
+		// remove it. otherwise, just remove original callback
+		$(this).off(event, handler || callback);
 		return;
 	}
 	return removeEventListener.apply(this, arguments);
@@ -122,9 +150,13 @@ var setupSpecialEvent = function setupSpecialEvent(eventName){
 	$.event.special[eventName] = {
 		noBubble: true,
 		setup: withSpecial(function(){
+			// setup is called the first time a handler for `eventName`
+			// is set up for each element
 			domEvents.addEventListener.call(this, eventName, handler);
 		}),
 		teardown: withSpecial(function(){
+			// teardown is called after the last handler is removed for
+			// each element
 			domEvents.removeEventListener.call(this, eventName, handler);
 		})
 	};

@@ -406,21 +406,43 @@ QUnit.test("extra args to handler can be read using `%arguments`", function () {
 
 QUnit.module("can-jquery - addEventListener / removeEventListener");
 
-QUnit.test("should clean up domData", function(){
+QUnit.test("should not trigger events on Document Fragments", function() {
+	expect(0);
+	var origOn = $.fn.on;
+	var origOff = $.fn.off;
+	$.fn.on = function() {
+		QUnit.ok(false, 'should not set up jQuery event listener');
+	};
+	$.fn.off = function() {
+		QUnit.ok(false, 'should not remove jQuery event listener');
+	};
+
+	var el = document.createDocumentFragment();
+
+	domEvents.addEventListener.call(el, "custom-event", function() { });
+	domEvents.removeEventListener.call(el, "custom-event", function() { });
+
+	$.fn.on = origOn;
+	$.fn.off = origOff;
+});
+
+QUnit.test("should call correct `removed` handler when one is removed", function() {
 	var $el = $("<div>");
 
-	domEvents.addEventListener.call($el[0], "removed", function(){
-		QUnit.ok(!domData.get.call($el[0], 'can-jquery.eventHandler'), 'domData is removed for element');
-		QUnit.start();
-	});
+	var teardownOne = function() {
+		QUnit.ok(false, "removed event listener should not be called");
+	};
 
-	domEvents.addEventListener.call($el[0], "inserted", function(){
-		QUnit.ok(domData.get.call($el[0], 'can-jquery.eventHandler'), 'domData is set for element');
-		$el.remove();
-	});
+	var teardownTwo = function() {
+		QUnit.ok(true, "event listener should be called");
+	};
+
+	domEvents.addEventListener.call($el[0], "removed", teardownOne);
+	domEvents.addEventListener.call($el[0], "removed", teardownTwo);
+
+	domEvents.removeEventListener.call($el[0], "removed", teardownOne);
 
 	var fixture = $("#qunit-fixture");
 	fixture.append($el);
-
-	QUnit.stop();
+	$el.remove();
 });
