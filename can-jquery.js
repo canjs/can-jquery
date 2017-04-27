@@ -45,7 +45,7 @@ domEvents.addEventListener = function(event, callback){
 	// don't set up event listeners for document fragments
 	// since events will not be triggered and the handlers
 	// could lead to memory leaks
-	if (this.nodeName === '#document-fragment') {
+	if (this.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
 		return;
 	}
 
@@ -92,7 +92,7 @@ var removeEventListener = domEvents.removeEventListener;
 domEvents.removeEventListener = function(event, callback){
 	// event handlers are not set up on document fragments
 	// so they do not need to be removed
-	if (this.nodeName === '#document-fragment') {
+	if (this.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
 		return;
 	}
 
