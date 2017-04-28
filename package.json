@@ -40,7 +40,7 @@
     "can-define": "^1.0.0",
     "can-list": "^3.0.0",
     "can-map": "^3.0.0",
-    "can-stache": "^3.0.0",
+    "can-stache": "3.0.23",
     "can-stache-bindings": "^3.0.8",
     "can-vdom": "^3.0.2",
     "done-serve": "^1.0.0",
