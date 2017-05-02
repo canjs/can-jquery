@@ -404,6 +404,49 @@ QUnit.test("extra args to handler can be read using `%arguments`", function () {
 	canEvent.trigger.call(p0, "myevent", ["myarg1", "myarg2"]);
 });
 
+QUnit.module("can-jquery - addEventListener / removeEventListener");
+
+QUnit.test("should not trigger events on Document Fragments", function() {
+	expect(0);
+	var origOn = $.fn.on;
+	var origOff = $.fn.off;
+	$.fn.on = function() {
+		QUnit.ok(false, 'should not set up jQuery event listener');
+	};
+	$.fn.off = function() {
+		QUnit.ok(false, 'should not remove jQuery event listener');
+	};
+
+	var el = document.createDocumentFragment();
+
+	domEvents.addEventListener.call(el, "custom-event", function() { });
+	domEvents.removeEventListener.call(el, "custom-event", function() { });
+
+	$.fn.on = origOn;
+	$.fn.off = origOff;
+});
+
+QUnit.test("should call correct `removed` handler when one is removed", function() {
+	var $el = $("<div>");
+
+	var teardownOne = function() {
+		QUnit.ok(false, "removed event listener should not be called");
+	};
+
+	var teardownTwo = function() {
+		QUnit.ok(true, "event listener should be called");
+	};
+
+	domEvents.addEventListener.call($el[0], "removed", teardownOne);
+	domEvents.addEventListener.call($el[0], "removed", teardownTwo);
+
+	domEvents.removeEventListener.call($el[0], "removed", teardownOne);
+
+	var fixture = $("#qunit-fixture");
+	fixture.append($el);
+	$el.remove();
+});
+
 QUnit.module("can-jquery/legacy - data functions", {
 	setup: function() {
 		enableLegacyMode($);
