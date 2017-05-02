@@ -1,5 +1,5 @@
 /* global module, require */
-var $ = require("jquery");
+var $ = require("can-jquery");
 var domData = require("can-util/dom/data/data");
 var each = require("can-util/js/each/each");
 var assign = require("can-util/js/assign/assign");

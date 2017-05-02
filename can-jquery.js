@@ -12,7 +12,6 @@ var setImmediate = require("can-util/js/set-immediate/set-immediate");
 var canViewModel = require("can-view-model");
 var MO = require("can-util/dom/mutation-observer/mutation-observer");
 var CIDMap = require("can-util/js/cid-map/cid-map");
-require("./data.js");
 
 module.exports = ns.$ = $;
 
