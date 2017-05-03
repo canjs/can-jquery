@@ -14,6 +14,7 @@ var canEvent = require("can-event");
 require("can-util/dom/events/inserted/inserted");
 require("can-util/dom/events/removed/removed");
 require("can-stache-bindings");
+require("can-jquery/data");
 
 QUnit.module("can-jquery/legacy - can-controls", {
 	setup: function() {
