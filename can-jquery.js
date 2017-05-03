@@ -30,9 +30,14 @@ var domDispatch = domEvents.dispatch;
 domEvents.dispatch = function(event, args) {
 	// check for dispatch of native event object, which
 	// is supported by domDispatch but not by jQuery
-	if(typeof event === "object" && !args) {
-		args = [event];
-		event = event.type;
+	if(typeof event === "object" && !Object.getOwnPropertyDescriptor(event, "type")) {
+		// Some native events break jQuery dispatch by having non-enumerable
+		//   type properties.
+		Object.defineProperty(event, "type", {
+			configurabe: true,
+			enumerable: true,
+			value: event.type
+		});
 	}
 	if (!specialEvents[event] && !nativeDispatchEvents[event]) {
 		$(this).trigger(event, args);
