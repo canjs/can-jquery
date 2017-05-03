@@ -32,7 +32,7 @@ domEvents.dispatch = function(event, args) {
 		// Some native events break jQuery dispatch by having non-enumerable
 		//   type properties.
 		Object.defineProperty(event, "type", {
-			configurabe: true,
+			configurable: true,
 			enumerable: true,
 			value: event.type
 		});
