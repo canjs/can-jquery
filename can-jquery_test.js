@@ -457,7 +457,7 @@ QUnit.test("should call beforeremove before removed", function() {
 	});
 
 	$el.on("removed", function(){
-		QUnit.ok(true, "beforeremove was called before removed");
+		QUnit.ok(calledBeforeRemove, "beforeremove was called before removed");
 	});
 
 	var fixture = $("#qunit-fixture")[0];
