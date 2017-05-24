@@ -251,6 +251,7 @@ var oldClean = $.cleanData;
 $.cleanData = function (elems){
 	$.each(elems, function(i, elem){
 		if(elem) {
+			domDispatch.call(elem, "beforeremove", [], false);
 			domDispatch.call(elem, "removed", [], false);
 		}
 	});
