@@ -61,7 +61,7 @@ QUnit.test("inserted is triggered", function(){
 QUnit.test("inserted does not bubble", function(){
 	expect(2);
 	var $div = $("<div>");
-	var $span = $("<span>");	
+	var $span = $("<span>");
 
 	$div.on("inserted", function(){
 		QUnit.ok(true, "inserted fired for div");
@@ -445,4 +445,23 @@ QUnit.test("should call correct `removed` handler when one is removed", function
 	var fixture = $("#qunit-fixture");
 	fixture.append($el);
 	$el.remove();
+});
+
+
+QUnit.test("should call beforeremove before removed", function() {
+	var calledBeforeRemove = false;
+	var $el = $("<div>");
+
+	$el.on("beforeremove", function(){
+		calledBeforeRemove = true;
+	});
+
+	$el.on("removed", function(){
+		QUnit.ok(true, "beforeremove was called before removed");
+	});
+
+	var fixture = $("#qunit-fixture")[0];
+
+	mutate.appendChild.call(fixture, $el[0]);
+	mutate.removeChild.call(fixture, $el[0]);
 });
