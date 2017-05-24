@@ -10,6 +10,7 @@ var domData = require("can-util/dom/data/data");
 var CanMap = require("can-map");
 var stache = require("can-stache");
 var canEvent = require("can-event");
+var Component = require('can-component');
 
 require("can-util/dom/events/inserted/inserted");
 require("can-util/dom/events/removed/removed");
@@ -449,19 +450,33 @@ QUnit.test("should call correct `removed` handler when one is removed", function
 
 
 QUnit.test("should call beforeremove before removed", function() {
-	var calledBeforeRemove = false;
-	var $el = $("<div>");
 
-	$el.on("beforeremove", function(){
-		calledBeforeRemove = true;
+	var beforeRemoveCalls = 0;
+
+	log = function(str) {
+		return function() {
+			beforeRemoveCalls++;
+			return console.log(str);
+		};
+	};
+
+	var WithBeforeRemove = Component.extend({
+	  tag: 'with-before-remove',
+	  view: stache('<content/>'),
+	  events: {
+	     '{element} beforeremove': log('{element} beforeremove'),
+	     ' beforeremove': log(' beforeremove'),
+	     beforeremove: log('beforeremove')
+	  }
 	});
 
-	$el.on("removed", function(){
-		QUnit.ok(calledBeforeRemove, "beforeremove was called before removed");
-	});
+	var tmpl = stache('<with-before-remove>Test</with-before-remove>');
 
-	var fixture = $("#qunit-fixture")[0];
+	var $playground = $('#qunit-fixture');
 
-	mutate.appendChild.call(fixture, $el[0]);
-	mutate.removeChild.call(fixture, $el[0]);
+	$playground.append(tmpl());
+	$playground.empty();
+
+	equal(beforeRemoveCalls, 3, 'calls beforeremove 3 times when component is removed from page');
+
 });
