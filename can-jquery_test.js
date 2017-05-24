@@ -453,20 +453,17 @@ QUnit.test("should call beforeremove before removed", function() {
 
 	var beforeRemoveCalls = 0;
 
-	log = function(str) {
-		return function() {
-			beforeRemoveCalls++;
-			return console.log(str);
-		};
+	var beforeRemoveCalled = function() {
+		beforeRemoveCalls++;
 	};
 
-	var WithBeforeRemove = Component.extend({
+	Component.extend({
 	  tag: 'with-before-remove',
 	  view: stache('<content/>'),
 	  events: {
-	     '{element} beforeremove': log('{element} beforeremove'),
-	     ' beforeremove': log(' beforeremove'),
-	     beforeremove: log('beforeremove')
+	     '{element} beforeremove': beforeRemoveCalled,
+	     ' beforeremove': beforeRemoveCalled,
+	     beforeremove: beforeRemoveCalled
 	  }
 	});
 
