@@ -12,6 +12,7 @@ var setImmediate = require("can-util/js/set-immediate/set-immediate");
 var canViewModel = require("can-view-model");
 var MO = require("can-util/dom/mutation-observer/mutation-observer");
 var CIDMap = require("can-util/js/cid-map/cid-map");
+var assign = require("can-util/js/assign/assign");
 
 module.exports = ns.$ = $;
 
@@ -28,16 +29,17 @@ if ($) {
 // when using domEvents.dispatch/domEvents.trigger.
 var domDispatch = domEvents.dispatch;
 domEvents.dispatch = function(event, args) {
+	var eventObj;
+
 	if (!specialEvents[event] && !nativeDispatchEvents[event]) {
 		// fix KeyboardEvent and other constructed events that do not have an own `type` property
 		// jquery.trigger will throw when on event.indexOf(...) if event.hasOwnProperty('type') fails
 		if (typeof event !== 'string' && !event.hasOwnProperty('type')) {
-			Object.defineProperty(event, 'type', {
-				value: event.type
-			});
+			// convert event to an object
+			eventObj = assign({}, event);
 		}
 
-		$(this).trigger(event, args);
+		$(this).trigger(eventObj || event, args);
 	} else {
 		domDispatch.apply(this, arguments);
 	}
