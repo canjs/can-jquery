@@ -39,6 +39,15 @@ domEvents.dispatch = function(event, args) {
 		if(event && typeof event === "object" && !isPlainObject(event)) {
 		  event = assign({}, event);
 		}
+
+		// fix KeyboardEvent and other constructed events that do not have an own `type` property
+		// jquery.trigger will throw when on event.indexOf(...) if event.hasOwnProperty('type') fails
+		if (typeof event !== 'string' && !event.hasOwnProperty('type')) {
+			Object.defineProperty(event, 'type', {
+				value: event.type
+			});
+		}
+
 		$(this).trigger(event, args);
 	} else {
 		domDispatch.apply(this, arguments);
