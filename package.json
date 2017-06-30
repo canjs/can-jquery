@@ -28,7 +28,9 @@
     "canjs"
   ],
   "dependencies": {
+    "can-dom-events": "^1.0.3",
     "can-event": "^3.5.0-pre.2",
+    "can-event-dom-enter": "^1.0.1",
     "can-util": "^3.9.0-pre.9",
     "can-view-model": "^3.4.0-pre.0",
     "jquery": "2.x - 3.x"
