@@ -14,6 +14,10 @@ var MO = require("can-util/dom/mutation-observer/mutation-observer");
 var CIDMap = require("can-util/js/cid-map/cid-map");
 var assign = require("can-util/js/assign/assign");
 
+var addEnterEvent = require('can-event-dom-enter/compat');
+addEnterEvent(domEvents);
+
+
 module.exports = ns.$ = $;
 
 var specialEvents = {};
@@ -59,7 +63,7 @@ domEvents.addEventListener = function(event, callback){
 		return;
 	}
 
-	if(!inSpecial) {
+	if(!inSpecial && !domEvents._compatRegistry[event]) {
 
 		if(event === "removed") {
 			var element = this;
