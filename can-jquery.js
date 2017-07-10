@@ -14,6 +14,10 @@ var MO = require("can-util/dom/mutation-observer/mutation-observer");
 var CIDMap = require("can-util/js/cid-map/cid-map");
 var assign = require("can-util/js/assign/assign");
 
+var addEnterEvent = require('can-event-dom-enter/compat');
+addEnterEvent(domEvents);
+
+
 module.exports = ns.$ = $;
 
 var specialEvents = {};
@@ -21,8 +25,6 @@ var nativeDispatchEvents = { focus: true };
 var inSpecial = false;
 var slice = Array.prototype.slice;
 var removedEventHandlerMap = new CIDMap();
-
-if ($) {
 
 // Override dispatch to use $.trigger.
 // This is needed so that extra arguments can be used
@@ -45,6 +47,11 @@ domEvents.dispatch = function(event, args) {
 	}
 };
 
+function isFragment (node) {
+	// Node.DOCUMENT_FRAGMENT_NODE === 11
+	return node && node.nodeType === 11;
+}
+
 // Override addEventListener to listen to jQuery events.
 // This is needed to add the arguments provided to $.trigger
 // onto the event.
@@ -55,11 +62,11 @@ domEvents.addEventListener = function(event, callback){
 	// don't set up event listeners for document fragments
 	// since events will not be triggered and the handlers
 	// could lead to memory leaks
-	if (this.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+	if (isFragment(this)) {
 		return;
 	}
 
-	if(!inSpecial) {
+	if(!inSpecial && !domEvents._compatRegistry[event]) {
 
 		if(event === "removed") {
 			var element = this;
@@ -102,7 +109,7 @@ var removeEventListener = domEvents.removeEventListener;
 domEvents.removeEventListener = function(event, callback){
 	// event handlers are not set up on document fragments
 	// so they do not need to be removed
-	if (this.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+	if (isFragment(this)) {
 		return;
 	}
 
@@ -211,7 +218,7 @@ if(cbIndex === undefined) {
 				if (typeof args[0] === "string") {
 					args[0] = buildFragment(args[0]);
 				}
-				if (args[0].nodeType === 11) {
+				if (isFragment(args[0])) {
 					elems = getChildNodes(args[0]);
 				} else if( isArrayLike( args[0] ) ) {
 					elems = makeArray(args[0]);
@@ -235,7 +242,7 @@ if(cbIndex === undefined) {
 		function (args, table, callback) {
 			return oldDomManip.call(this, args, table, function (elem) {
 				var elems;
-				if (elem.nodeType === 11) {
+				if (isFragment(elem)) {
 					elems = makeArray( getChildNodes(elem) );
 				}
 				var ret = callback.apply(this, arguments);
@@ -246,7 +253,7 @@ if(cbIndex === undefined) {
 		function (args, callback) {
 			return oldDomManip.call(this, args, function (elem) {
 				var elems;
-				if (elem.nodeType === 11) {
+				if (isFragment(elem)) {
 					elems = makeArray( getChildNodes(elem) );
 				}
 				var ret = callback.apply(this, arguments);
@@ -272,5 +279,3 @@ $.cleanData = function (elems){
 $.fn.viewModel = function(){
 	return canViewModel(this[0]);
 };
-
-}
