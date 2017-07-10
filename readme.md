@@ -1,5 +1,7 @@
 # can-jquery
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/canjs/can-jquery.svg)](https://greenkeeper.io/)
+
 [![Build Status](https://travis-ci.org/canjs/can-jquery.png?branch=master)](https://travis-ci.org/canjs/can-jquery)
 
 CanJS integrations for jQuery
