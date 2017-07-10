@@ -12,8 +12,6 @@ var setImmediate = require("can-util/js/set-immediate/set-immediate");
 var canViewModel = require("can-view-model");
 var MO = require("can-util/dom/mutation-observer/mutation-observer");
 var CIDMap = require("can-util/js/cid-map/cid-map");
-var assign = require("can-util/js/assign/assign");
-var isPlainObject = require("can-util/js/is-plain-object/is-plain-object");
 
 module.exports = ns.$ = $;
 
@@ -28,18 +26,9 @@ if ($) {
 // Override dispatch to use $.trigger.
 // This is needed so that extra arguments can be used
 // when using domEvents.dispatch/domEvents.trigger.
-
-
-// import assign and isplainobject
-
-
 var domDispatch = domEvents.dispatch;
 domEvents.dispatch = function(event, args) {
 	if (!specialEvents[event] && !nativeDispatchEvents[event]) {
-		if(event && typeof event === "object" && !isPlainObject(event)) {
-		  event = assign({}, event);
-		}
-
 		// fix KeyboardEvent and other constructed events that do not have an own `type` property
 		// jquery.trigger will throw when on event.indexOf(...) if event.hasOwnProperty('type') fails
 		if (typeof event !== 'string' && !event.hasOwnProperty('type')) {
