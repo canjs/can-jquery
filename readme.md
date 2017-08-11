@@ -1,71 +1,26 @@
 # can-jquery
 
+[![Join the chat at https://gitter.im/canjs/canjs](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/canjs/canjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/canjs/can-jquery/blob/master/LICENSE.md)
+[![npm version](https://badge.fury.io/js/can-jquery.svg)](https://www.npmjs.com/package/can-jquery)
+[![Travis build status](https://travis-ci.org/canjs/can-jquery.svg?branch=master)](https://travis-ci.org/canjs/can-jquery)
 [![Greenkeeper badge](https://badges.greenkeeper.io/canjs/can-jquery.svg)](https://greenkeeper.io/)
-
-[![Build Status](https://travis-ci.org/canjs/can-jquery.png?branch=master)](https://travis-ci.org/canjs/can-jquery)
 
 CanJS integrations for jQuery
 
-- <code>[__can-jquery__ jQuery](#can-jquery-jquery)</code>
-  - <code>[__can-jquery/legacy__ jQuery](#can-jquerylegacy-jquery)</code>
+## Documentation
 
-## API
+Read the [API docs on CanJS.com](https://canjs.com/doc/can-jquery.html).
 
-## can-jquery `{jQuery}`
+## Changelog
 
-Extensions to the event system so that can events and jQuery events are cross-bound. 
-Importing can-jquery will return the [jQuery object](http://api.jquery.com/jquery/) and wire up the event system.
-
-```js
-var $ = require("can-jquery");
-
-var div = $("<div>");
-
-div.on("inserted", function(){
-	// it inserted!
-});
-
-$("body").append(div);
-```
-
-
-
-
-### <code>jQuery</code>
-
-### can-jquery/legacy `{jQuery}`
-
-Enables legacy integrations between CanJS and jQuery. 
-Importing can/jquery/legacy will return the [jQuery object](http://api.jquery.com/jquery/). It will also import [can-jquery](#can-jquery-jquery) so that the event system hooks are set up.
-
-Additionally it will force element callbacks (such as those in [can-control]) to be jQuery wrapped.
-
-```js
-var $ = require("can-jquery/legacy");
-```
-
-
-
-
-#### <code>jQuery</code>
-
+See the [latest releases on GitHub](https://github.com/canjs/can-jquery/releases).
 
 ## Contributing
 
-### Making a Build
+The [contribution guide](https://github.com/canjs/can-jquery/blob/master/CONTRIBUTING.md) has information on getting help, reporting bugs, developing locally, and more.
 
-To make a build of the distributables into `dist/` in the cloned repository run
+## License
 
-```
-npm install
-node build
-```
+[MIT](https://github.com/canjs/can-jquery/blob/master/LICENSE.md)
 
-### Running the tests
-
-Tests can run in the browser by opening a webserver and visiting the `test.html` page.
-Automated tests that run the tests from the command line in Firefox can be run with
-
-```
-npm test
-```
