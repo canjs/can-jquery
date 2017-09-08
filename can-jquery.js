@@ -10,7 +10,7 @@ var makeArray = require("can-util/js/make-array/make-array");
 var mutate = require("can-util/dom/mutate/mutate");
 var setImmediate = require("can-util/js/set-immediate/set-immediate");
 var canViewModel = require("can-view-model");
-var MO = require("can-util/dom/mutation-observer/mutation-observer");
+var getMutationObserver = require("can-globals/mutation-observer/mutation-observer");
 var CIDMap = require("can-util/js/cid-map/cid-map");
 var assign = require("can-util/js/assign/assign");
 
@@ -82,7 +82,7 @@ domEvents.addEventListener = function(event, callback){
 				domEvents.removeEventListener.call(element, event, handler);
 
 				var self = this, args = arguments;
-				if (MO()) {
+				if (getMutationObserver()) {
 					return callback.apply(self, args);
 				} else {
 					// if not using mutation observers, ensure event is dispatch async
