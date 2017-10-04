@@ -4,7 +4,7 @@ var $ = require("can-jquery/legacy");
 var enableLegacyMode = require("can-jquery/legacy-toggle").enable;
 var disableLegacyMode = require("can-jquery/legacy-toggle").disable;
 var mutate = require("can-util/dom/mutate/mutate");
-var MO = require("can-util/dom/mutation-observer/mutation-observer");
+var globals = require("can-globals");
 var domEvents = require("can-util/dom/events/events");
 var domData = require("can-util/dom/data/data");
 var CanMap = require("can-map");
@@ -84,8 +84,7 @@ QUnit.test("inserted does not bubble", function(){
 });
 
 QUnit.test("inserted is triggered without MutationObserver", function(){
-	var mo = MO();
-	MO(false);
+	globals.setKeyValue('MutationObserver', null);
 
 	var $el = $("<div>");
 
@@ -94,7 +93,7 @@ QUnit.test("inserted is triggered without MutationObserver", function(){
 
 		QUnit.start();
 
-		MO(mo);
+		globals.reset('MutationObserver');
 	});
 
 	mutate.appendChild.call($("#qunit-fixture")[0], $el[0]);
@@ -102,10 +101,8 @@ QUnit.test("inserted is triggered without MutationObserver", function(){
 	QUnit.stop();
 });
 
-QUnit.test("inserted is triggered without MutationObserver going through jQuery",
-					 function(){
-	var mo = MO();
-	MO(false);
+QUnit.test("inserted is triggered without MutationObserver going through jQuery", function(){
+	globals.setKeyValue('MutationObserver', null);
 
 	var $el = $("<div>");
 
@@ -114,7 +111,7 @@ QUnit.test("inserted is triggered without MutationObserver going through jQuery"
 
 		QUnit.start();
 
-		MO(mo);
+		globals.reset('MutationObserver');
 	});
 
 	$("#qunit-fixture").append($el);
@@ -156,8 +153,7 @@ QUnit.test("removed is triggered", function(){
 });
 
 QUnit.test("removed is triggered without MutationObserver", function(){
-	var mo = MO();
-	MO(false);
+	globals.setKeyValue('MutationObserver', null);
 
 	var $el = $("<div>");
 
@@ -166,7 +162,7 @@ QUnit.test("removed is triggered without MutationObserver", function(){
 
 		QUnit.start();
 
-		MO(mo);
+		globals.reset('MutationObserver');
 	});
 
 	var fixture = $("#qunit-fixture")[0];
@@ -178,8 +174,7 @@ QUnit.test("removed is triggered without MutationObserver", function(){
 });
 
 QUnit.test("removed is triggered without MutationObserver through jQuery", function(){
-	var mo = MO();
-	MO(false);
+	globals.setKeyValue('MutationObserver', null);
 
 	var $el = $("<div>");
 
@@ -187,7 +182,8 @@ QUnit.test("removed is triggered without MutationObserver through jQuery", funct
 		QUnit.ok(true, "removed did fire");
 
 		QUnit.start();
-		MO(mo);
+		
+		globals.reset('MutationObserver');
 	});
 
 	$el.on("inserted", function(){
@@ -427,15 +423,19 @@ QUnit.test("should not trigger events on Document Fragments", function() {
 	$.fn.off = origOff;
 });
 
-QUnit.test("should call correct `removed` handler when one is removed", function() {
+QUnit.test("should call correct `removed` handler when one is removed", function(assert) {
+	var done = assert.async();
 	var $el = $("<div>");
 
 	var teardownOne = function() {
 		QUnit.ok(false, "removed event listener should not be called");
+		done();
 	};
 
 	var teardownTwo = function() {
 		QUnit.ok(true, "event listener should be called");
+		// Must be async to avoid race condition
+		done();
 	};
 
 	domEvents.addEventListener.call($el[0], "removed", teardownOne);
