@@ -26,7 +26,7 @@
     "canjs"
   ],
   "dependencies": {
-    "can-dom-events": "^1.0.3",
+    "can-dom-events": "^1.0.4",
     "can-event": "^3.5.0",
     "can-event-dom-enter": "^1.0.1",
     "can-globals": "^0.2.3",
