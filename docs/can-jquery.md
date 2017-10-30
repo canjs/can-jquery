@@ -1,5 +1,6 @@
 @module {jQuery} can-jquery can-jquery
-@parent can-ecosystem
+@parent can-dom-utilities
+@collection can-ecosystem
 @group can-jquery.modules 0 Modules
 @group can-jquery.fns 1 Methods
 @package ../package.json
