@@ -48,10 +48,10 @@ if ($) {
 		}
 	};
 
-	function isFragment (node) {
+	var isFragment = function(node) {
 		// Node.DOCUMENT_FRAGMENT_NODE === 11
 		return node && node.nodeType === 11;
-	}
+	};
 
 	// Override addEventListener to listen to jQuery events.
 	// This is needed to add the arguments provided to $.trigger
