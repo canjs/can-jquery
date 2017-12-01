@@ -32,7 +32,7 @@
     "can-event-dom-enter": "^1.0.2",
     "can-globals": "^0.2.3",
     "can-util": "^3.10.12",
-    "can-view-model": "^3.4.0",
+    "can-view-model": "3.5.1",
     "jquery": "2.x - 3.x"
   },
   "devDependencies": {
