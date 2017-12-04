@@ -14,9 +14,9 @@ var getMutationObserver = require("can-globals/mutation-observer/mutation-observ
 var CIDMap = require("can-util/js/cid-map/cid-map");
 var assign = require("can-util/js/assign/assign");
 
-var addEnterEvent = require('can-event-dom-enter/compat');
-addEnterEvent(domEvents);
-
+var addEventJQuery = require('can-dom-events/helpers/add-event-jquery');
+var domEnter = require('can-event-dom-enter');
+addEventJQuery($, domEnter);
 
 module.exports = ns.$ = $;
 
