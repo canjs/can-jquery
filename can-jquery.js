@@ -16,7 +16,6 @@ var assign = require("can-util/js/assign/assign");
 
 var addEventJQuery = require('can-dom-events/helpers/add-event-jquery');
 var domEnter = require('can-event-dom-enter');
-addEventJQuery($, domEnter);
 
 module.exports = ns.$ = $;
 
@@ -27,6 +26,8 @@ var slice = Array.prototype.slice;
 var removedEventHandlerMap = new CIDMap();
 
 if ($) {
+	addEventJQuery($, domEnter);
+
 	// Override dispatch to use $.trigger.
 	// This is needed so that extra arguments can be used
 	// when using domEvents.dispatch/domEvents.trigger.
