@@ -137,6 +137,7 @@ if ($) {
 	var delegateEventType = function delegateEventType(type) {
 		var typeMap = {
 			focus: 'focusin',
+			enter: 'keyup',
 			blur: 'focusout'
 		};
 		return typeMap[type] || type;
