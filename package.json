@@ -38,7 +38,7 @@
   "devDependencies": {
     "can-component": "^3.3.4",
     "can-control": "^3.2.0",
-    "can-define": "^1.5.0",
+    "can-define": "^2.5.4",
     "can-list": "^3.2.1",
     "can-map": "^3.4.0",
     "can-stache": "^3.8.0",
