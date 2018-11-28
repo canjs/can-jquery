@@ -50,7 +50,7 @@
     "qunitjs": "^2.4.0",
     "steal": "^1.5.15",
     "steal-qunit": "^1.0.1",
-    "steal-tools": "^1.9.0",
+    "steal-tools": "^2.0.10",
     "testee": "^0.7.0"
   }
 }
