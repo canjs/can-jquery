@@ -41,7 +41,7 @@
     "can-define": "^1.5.0",
     "can-list": "^3.2.1",
     "can-map": "^3.4.0",
-    "can-stache": "^3.8.0",
+    "can-stache": "^5.1.0",
     "can-stache-bindings": "^3.4.0",
     "can-test-helpers": "^1.0.1",
     "can-vdom": "^3.2.1",
