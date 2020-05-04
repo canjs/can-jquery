@@ -33,7 +33,7 @@
     "can-globals": "<2.0.0",
     "can-util": "^3.10.12",
     "can-view-model": "^3.4.0",
-    "jquery": "2.x - 3.x"
+    "jquery": "3.5.1"
   },
   "devDependencies": {
     "can-component": "^3.3.4",
